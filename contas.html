@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contas de acesso — Conecta Caiçara</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="contas">
+
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar"></aside>
+
+  <main class="main-content">
+    <button class="btn-menu-mobile" id="btn-menu-mobile">☰ Menu</button>
+
+    <div class="topo-pagina">
+      <div>
+        <h1>Contas de acesso</h1>
+        <p class="subtitulo">Crie logins para as integrantes e gerencie permissões.</p>
+      </div>
+      <div class="barra-acoes">
+        <button class="btn btn-primario" id="btn-nova-conta">+ Nova conta</button>
+      </div>
+    </div>
+
+    <div class="tabela-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Usuária</th>
+            <th>Participante vinculada</th>
+            <th>Perfil</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="tbody-contas"></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<!-- Modal nova conta -->
+<div class="modal-fundo" id="modal-conta">
+  <div class="modal-caixa">
+    <div class="modal-cabecalho">
+      <h2>Nova conta de acesso</h2>
+      <button class="modal-fechar" id="fechar-modal-conta">&times;</button>
+    </div>
+    <form id="form-conta">
+      <div class="campo">
+        <label for="conta-tipo">Tipo de conta</label>
+        <select id="conta-tipo">
+          <option value="integrante">Integrante (vinculada a uma participante)</option>
+          <option value="admin">Coordenação (acesso total ao sistema)</option>
+        </select>
+      </div>
+      <div class="campo" id="linha-conta-participante">
+        <label for="conta-participante">Vincular à participante</label>
+        <select id="conta-participante"></select>
+        <span class="dica-campo">Somente participantes que ainda não têm login aparecem aqui.</span>
+      </div>
+      <div class="campo">
+        <label for="conta-usuario">Usuária (login) *</label>
+        <input type="text" id="conta-usuario" required>
+      </div>
+      <div class="campo">
+        <label for="conta-senha">Senha inicial *</label>
+        <input type="text" id="conta-senha" minlength="6" placeholder="mínimo 6 caracteres" required>
+      </div>
+      <div class="barra-acoes" style="justify-content:flex-end;">
+        <button type="button" class="btn btn-fantasma" id="cancelar-conta">Cancelar</button>
+        <button type="submit" class="btn btn-primario">Criar conta</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="js/firebase-init.js"></script>
+<script src="js/db.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+<script src="js/contas.js"></script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Histórico — Conecta Caiçara</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body data-page="historico">
+
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar"></aside>
+
+  <main class="main-content">
+    <button class="btn-menu-mobile" id="btn-menu-mobile">☰ Menu</button>
+
+    <div class="topo-pagina">
+      <div>
+        <h1>Histórico de chamadas</h1>
+        <p class="subtitulo">Consulte, filtre e edite todas as chamadas já registradas.</p>
+      </div>
+      <div class="barra-acoes">
+        <button class="btn btn-secundario" id="btn-exportar">⬇ Exportar planilha</button>
+      </div>
+    </div>
+
+    <div class="barra-filtros">
+      <div class="campo">
+        <label>Data</label>
+        <input type="date" id="f-data">
+      </div>
+      <div class="campo">
+        <label>Reunião</label>
+        <input type="text" id="f-atividade" placeholder="local da reunião">
+      </div>
+      <div class="campo">
+        <label>Participante</label>
+        <input type="text" id="f-participante" placeholder="nome da participante">
+      </div>
+      <div class="campo">
+        <label>Situação</label>
+        <select id="f-status">
+          <option value="">Todas</option>
+          <option value="presente">Presente</option>
+          <option value="falta">Falta</option>
+          <option value="justificada">Justificada</option>
+        </select>
+      </div>
+      <button class="btn btn-fantasma" id="btn-limpar-filtros">Limpar filtros</button>
+    </div>
+
+    <div class="tabela-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Reunião</th>
+            <th>Participantes</th>
+            <th>Presentes</th>
+            <th>Faltas</th>
+            <th>Justificadas</th>
+          </tr>
+        </thead>
+        <tbody id="tbody-historico"></tbody>
+      </table>
+      <div id="historico-vazio" class="tabela-vazia oculto">Nenhuma chamada encontrada com esses filtros.</div>
+    </div>
+  </main>
+</div>
+
+<!-- Modal de detalhe / edição de uma chamada -->
+<div class="modal-fundo" id="modal-chamada">
+  <div class="modal-caixa grande">
+    <div class="modal-cabecalho">
+      <h2 id="modal-chamada-titulo">Detalhe da chamada</h2>
+      <button class="modal-fechar" id="fechar-modal-chamada">&times;</button>
+    </div>
+    <div id="modal-chamada-corpo"></div>
+    <div class="barra-acoes" style="justify-content:flex-end; margin-top:16px;">
+      <button type="button" class="btn btn-perigo" id="btn-excluir-chamada">Excluir chamada</button>
+      <button type="button" class="btn btn-primario" id="btn-salvar-edicao-chamada">Salvar alterações</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="js/firebase-init.js"></script>
+<script src="js/db.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+<script src="js/historico.js"></script>
+</body>
+</html>

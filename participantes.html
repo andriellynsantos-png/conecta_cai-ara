@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Participantes — Conecta Caiçara</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="participantes">
+
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar"></aside>
+
+  <main class="main-content">
+    <button class="btn-menu-mobile" id="btn-menu-mobile">☰ Menu</button>
+
+    <div class="topo-pagina">
+      <div>
+        <h1>Participantes</h1>
+        <p class="subtitulo">Cadastre, edite e acompanhe as integrantes do projeto.</p>
+      </div>
+      <div class="barra-acoes">
+        <button class="btn btn-primario" id="btn-nova-participante">+ Nova participante</button>
+      </div>
+    </div>
+
+    <div class="barra-filtros">
+      <div class="campo">
+        <label>Buscar por nome</label>
+        <div class="busca-wrap">
+          <input type="text" id="busca-nome" placeholder="Digite um nome...">
+        </div>
+      </div>
+      <div class="campo">
+        <label>Status</label>
+        <select id="filtro-status">
+          <option value="">Todas</option>
+          <option value="ativa">Ativas</option>
+          <option value="inativa">Inativas</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="tabela-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Turma/ano</th>
+            <th>Entrada</th>
+            <th>Status</th>
+            <th>% Presença</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="tbody-participantes"></tbody>
+      </table>
+      <div id="tabela-vazia" class="tabela-vazia oculto">Nenhuma participante encontrada.</div>
+    </div>
+  </main>
+</div>
+
+<!-- Modal de cadastro/edição -->
+<div class="modal-fundo" id="modal-participante">
+  <div class="modal-caixa">
+    <div class="modal-cabecalho">
+      <h2 id="modal-titulo">Nova participante</h2>
+      <button class="modal-fechar" id="fechar-modal-participante">&times;</button>
+    </div>
+    <form id="form-participante">
+      <input type="hidden" id="participante-id">
+      <div class="campo">
+        <label for="p-nome">Nome completo *</label>
+        <input type="text" id="p-nome" required>
+      </div>
+      <div class="linha-campos">
+        <div class="campo">
+          <label for="p-turma">Turma / ano</label>
+          <input type="text" id="p-turma" placeholder="ex: 3º ano B">
+        </div>
+        <div class="campo">
+          <label for="p-entrada">Data de entrada</label>
+          <input type="date" id="p-entrada">
+        </div>
+      </div>
+      <div class="linha-campos">
+        <div class="campo">
+          <label for="p-status">Status</label>
+          <select id="p-status">
+            <option value="ativa">Ativa</option>
+            <option value="inativa">Inativa</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label for="p-contato">Contato (opcional)</label>
+          <input type="text" id="p-contato" placeholder="telefone ou responsável">
+        </div>
+      </div>
+      <div class="campo">
+        <label for="p-obs">Observações</label>
+        <textarea id="p-obs" rows="2"></textarea>
+      </div>
+
+      <div class="campo campo-check" id="linha-criar-login">
+        <input type="checkbox" id="p-criar-login">
+        <label for="p-criar-login" style="font-weight:400;">Criar login de acesso para esta participante agora</label>
+      </div>
+      <div id="area-login-inline" class="oculto">
+        <div class="linha-campos">
+          <div class="campo">
+            <label for="p-login-usuario">Usuária</label>
+            <input type="text" id="p-login-usuario" placeholder="ex: primeironome">
+          </div>
+          <div class="campo">
+            <label for="p-login-senha">Senha inicial</label>
+            <input type="text" id="p-login-senha" minlength="6" placeholder="mínimo 6 caracteres">
+          </div>
+        </div>
+      </div>
+
+      <div class="barra-acoes" style="justify-content:flex-end; margin-top:6px;">
+        <button type="button" class="btn btn-fantasma" id="cancelar-participante">Cancelar</button>
+        <button type="submit" class="btn btn-primario">Salvar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="js/firebase-init.js"></script>
+<script src="js/db.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+<script src="js/participantes.js"></script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Importar planilha — Conecta Caiçara</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body data-page="importacao">
+
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar"></aside>
+
+  <main class="main-content">
+    <button class="btn-menu-mobile" id="btn-menu-mobile">☰ Menu</button>
+
+    <div class="topo-pagina">
+      <div>
+        <h1>Importar planilha</h1>
+        <p class="subtitulo">Traga chamadas feitas fora do sistema (papel, Excel/Google Sheets).</p>
+      </div>
+    </div>
+
+    <div class="grid-2col">
+      <div class="card">
+        <div class="card-titulo">1. Envie o arquivo</div>
+        <div class="dropzone" id="dropzone">
+          <p><strong>Clique aqui</strong> ou arraste o arquivo .xlsx ou .csv</p>
+          <p class="text-mudo">O sistema lê automaticamente nomes, datas e presença/falta.</p>
+        </div>
+        <input type="file" id="input-arquivo" accept=".xlsx,.xls,.csv" class="oculto">
+
+        <div id="resumo-importacao" class="resumo-importacao oculto">
+          <div class="grid-cards">
+            <div class="card card-stat">
+              <div class="rotulo">Linhas lidas</div>
+              <div class="valor" id="res-lidas">0</div>
+            </div>
+            <div class="card card-stat">
+              <div class="rotulo">Registros importados</div>
+              <div class="valor verde" id="res-importados">0</div>
+            </div>
+            <div class="card card-stat">
+              <div class="rotulo">Duplicados ignorados</div>
+              <div class="valor oliva" id="res-duplicados">0</div>
+            </div>
+            <div class="card card-stat">
+              <div class="rotulo">Linhas com erro</div>
+              <div class="valor marrom" id="res-erros">0</div>
+            </div>
+          </div>
+          <div id="lista-erros"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-titulo">2. Estrutura esperada da planilha</div>
+        <p class="text-mudo">A planilha deve ter uma linha por participante/reunião, com estas colunas (nessa ordem ou com esses nomes de cabeçalho):</p>
+        <table class="modelo-tabela">
+          <thead>
+            <tr><th>Nome</th><th>Data</th><th>Reunião</th><th>Status</th><th>Observação</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Maria Silva</td><td>2026-03-10</td><td>Roda na praia</td><td>Presente</td><td></td></tr>
+            <tr><td>Ana Souza</td><td>2026-03-10</td><td>Roda na praia</td><td>Falta</td><td></td></tr>
+            <tr><td>Ana Souza</td><td>2026-03-17</td><td>Oficina de artesanato</td><td>Justificada</td><td>Atestado médico</td></tr>
+          </tbody>
+        </table>
+        <p class="dica-campo" style="margin-top:10px;">
+          • <strong>Status</strong> aceita: Presente, Falta ou Justificada (maiúsculas/minúsculas não importam).<br>
+          • <strong>Data</strong> pode estar como AAAA-MM-DD, DD/MM/AAAA ou como data do Excel.<br>
+          • Se o nome da participante não existir no sistema, ela é <strong>cadastrada automaticamente</strong> como ativa.<br>
+          • Linhas com a mesma participante + mesma data + mesma reunião já importadas antes são ignoradas, para não duplicar.
+        </p>
+        <button class="btn btn-secundario" id="btn-baixar-modelo" style="margin-top:12px;">⬇ Baixar planilha-modelo</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="js/firebase-init.js"></script>
+<script src="js/db.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+<script src="js/importacao.js"></script>
+</body>
+</html>

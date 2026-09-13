@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Entrar — Conecta Caiçara</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="tela-login">
+  <div class="login-caixa">
+    <div class="logo-topo">
+      <img src="assets/logo.jpeg" alt="Logo Conecta Caiçara">
+      <h1>Conecta Caiçara</h1>
+      <p>Controle de presença — Rodas sobre Areia</p>
+    </div>
+
+    <div id="area-mensagem"></div>
+
+    <form id="form-login">
+      <div class="campo">
+        <label for="username">Usuária</label>
+        <input type="text" id="username" autocomplete="username" placeholder="ex: admin" required>
+      </div>
+      <div class="campo">
+        <label for="senha">Senha</label>
+        <input type="password" id="senha" autocomplete="current-password" placeholder="Sua senha" required>
+      </div>
+      <div class="campo campo-check">
+        <input type="checkbox" id="manter-conectada">
+        <label for="manter-conectada" style="font-weight:400;">Manter conectada neste dispositivo</label>
+      </div>
+      <button type="submit" class="btn btn-primario">Entrar</button>
+    </form>
+
+    <p class="login-rodape">Esqueceu sua senha? Fale com a responsável pelo site.</p>
+
+    <div class="login-dica-admin">
+      Primeiro acesso do sistema? Abra a página <strong>primeiro-acesso.html</strong> uma única vez para criar a conta de coordenação inicial.
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="js/firebase-init.js"></script>
+<script src="js/db.js"></script>
+<script src="js/auth.js"></script>
+<script>
+  // Se já existe sessão válida, pula direto para a área correta
+  (async function redirecionarSeLogada() {
+    const user = await Auth.getCurrentUser();
+    if (user) {
+      window.location.href = user.role === 'admin' ? 'dashboard.html' : 'perfil.html';
+    }
+  })();
+
+  document.getElementById('form-login').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const username = document.getElementById('username').value;
+    const senha = document.getElementById('senha').value;
+    const manter = document.getElementById('manter-conectada').checked;
+    const areaMsg = document.getElementById('area-mensagem');
+    const botao = e.target.querySelector('button[type=submit]');
+
+    botao.disabled = true;
+    botao.textContent = 'Entrando...';
+
+    const resultado = await Auth.login(username, senha, manter);
+
+    if (!resultado.ok) {
+      areaMsg.innerHTML = `<div class="msg-erro" style="margin-bottom:14px;">${resultado.msg}</div>`;
+      botao.disabled = false;
+      botao.textContent = 'Entrar';
+      return;
+    }
+
+    window.location.href = resultado.user.role === 'admin' ? 'dashboard.html' : 'perfil.html';
+  });
+</script>
+</body>
+</html>
