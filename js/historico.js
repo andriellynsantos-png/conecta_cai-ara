@@ -91,7 +91,7 @@
 
     document.getElementById('modal-chamada-titulo').textContent = `${chamada.nomeAtividade} — ${formatarData(chamada.data)}`;
 
-    const linhas = chamada.registros
+        const linhas = chamada.registros
       .map((r) => {
         const p = mapaParticipantes[r.participanteId];
         const nome = p ? p.nome : '(participante removida)';
@@ -99,10 +99,12 @@
         <tr>
           <td>${escapeHtml(nome)}</td>
           <td>
-            <div class="barra-acoes" style="gap:12px;">
+            <div class="barra-acoes" style="gap:12px; flex-wrap:wrap;">
               <label style="font-weight:400;font-size:0.85rem;"><input type="radio" name="edit_${r.participanteId}" value="presente" ${r.status === 'presente' ? 'checked' : ''}> Presente</label>
               <label style="font-weight:400;font-size:0.85rem;"><input type="radio" name="edit_${r.participanteId}" value="falta" ${r.status === 'falta' ? 'checked' : ''}> Falta</label>
               <label style="font-weight:400;font-size:0.85rem;"><input type="radio" name="edit_${r.participanteId}" value="justificada" ${r.status === 'justificada' ? 'checked' : ''}> Justificada</label>
+              <label style="font-weight:400;font-size:0.85rem;color:var(--cinza-medio);"><input type="radio" name="edit_${r.participanteId}" value="nao_entrou"> Ainda não tinha entrado</label>
+              <label style="font-weight:400;font-size:0.85rem;color:var(--cinza-medio);"><input type="radio" name="edit_${r.participanteId}" value="saiu"> Já tinha saído</label>
             </div>
           </td>
           <td><input type="text" data-edit-obs="${r.participanteId}" value="${escapeHtml(r.obs || '')}" style="width:100%;padding:6px 8px;border-radius:6px;border:1px solid var(--cinza-borda);"></td>
@@ -117,6 +119,7 @@
           <tbody>${linhas}</tbody>
         </table>
       </div>
+      <p class="dica-campo" style="margin-top:8px;">Marcar "Ainda não tinha entrado" ou "Já tinha saído" remove essa participante do registro desta chamada ao salvar (não conta nem a favor nem contra a presença dela).</p>
     `;
 
     document.getElementById('modal-chamada').classList.add('aberto');
@@ -133,13 +136,16 @@
     const chamada = chamadas.find((c) => c.id === chamadaEmEdicao);
     if (!chamada) return;
 
-    chamada.registros = chamada.registros.map((r) => {
-      const radios = document.getElementsByName(`edit_${r.participanteId}`);
-      let status = r.status;
-      radios.forEach((rad) => { if (rad.checked) status = rad.value; });
-      const obsInput = document.querySelector(`input[data-edit-obs="${r.participanteId}"]`);
-      return { ...r, status, obs: obsInput ? obsInput.value.trim() : r.obs };
-    });
+        chamada.registros = chamada.registros
+      .map((r) => {
+        const radios = document.getElementsByName(`edit_${r.participanteId}`);
+        let status = r.status;
+        radios.forEach((rad) => { if (rad.checked) status = rad.value; });
+        const obsInput = document.querySelector(`input[data-edit-obs="${r.participanteId}"]`);
+        return { ...r, status, obs: obsInput ? obsInput.value.trim() : r.obs };
+      })
+      // remove da chamada quem foi marcada como "ainda não tinha entrado" / "já tinha saído"
+      .filter((r) => r.status !== 'nao_entrou' && r.status !== 'saiu');
     chamada.atualizadoEm = new Date().toISOString();
 
     await DB.saveChamadas(chamadas);
