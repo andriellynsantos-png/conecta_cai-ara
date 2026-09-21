@@ -120,15 +120,14 @@
         </div>`
         }
       </div>
-      <div class="card">
+            <div class="card">
         <div class="card-titulo">Resumo visual</div>
-        ${stats.total > 0 ? '<canvas id="grafico-perfil" height="220"></canvas>' : '<div class="tabela-vazia">Sem dados suficientes ainda.</div>'}
+        ${stats.total > 0 ? '<div class="grafico-caixa"><canvas id="grafico-perfil"></canvas></div>' : '<div class="tabela-vazia">Sem dados suficientes ainda.</div>'}
       </div>
-    </div>
   `;
 
   if (stats.total > 0) {
-    new Chart(document.getElementById('grafico-perfil'), {
+    desenharGrafico('grafico-perfil', {
       type: 'doughnut',
       data: {
         labels: ['Presenças', 'Faltas', 'Justificadas'],
@@ -139,7 +138,7 @@
           },
         ],
       },
-      options: { responsive: true, plugins: { legend: { position: 'bottom' } } },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } },
     });
   }
 })();

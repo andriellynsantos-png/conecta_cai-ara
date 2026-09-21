@@ -255,6 +255,16 @@ button, input, select, textarea {
   margin-bottom: 26px;
 }
 
+/* min-width:0 evita que o gráfico "empurre" a coluna do grid */
+.grid-2col > * { min-width: 0; }
+
+/* Caixa com altura fixa: é o que o Chart.js precisa para se desenhar */
+.grafico-caixa {
+  position: relative;
+  height: 280px;
+  width: 100%;
+}
+
 @media (max-width: 900px) {
   .grid-2col { grid-template-columns: 1fr; }
 }

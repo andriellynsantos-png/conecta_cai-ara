@@ -48,14 +48,14 @@
         </div>
       </div>
 
-      <div class="grid-2col">
+            <div class="grid-2col">
         <div class="card">
           <div class="card-titulo">Presenças x faltas por participante</div>
-          <canvas id="grafico-barras" height="220"></canvas>
+          <div class="grafico-caixa"><canvas id="grafico-barras"></canvas></div>
         </div>
         <div class="card">
           <div class="card-titulo">Resumo geral de presença</div>
-          <canvas id="grafico-pizza" height="220"></canvas>
+          <div class="grafico-caixa"><canvas id="grafico-pizza"></canvas></div>
         </div>
       </div>
 
@@ -92,7 +92,7 @@
     desenharGraficos(geral);
   }
 
-  function desenharGraficos(geral) {
+    function desenharGraficos(geral) {
     const cores = {
       verde: '#3f7d52',
       marrom: '#a1442e',
@@ -105,12 +105,12 @@
       .sort((a, b) => b.stats.total - a.stats.total)
       .slice(0, 8);
 
-    const ctxBar = document.getElementById('grafico-barras');
-    if (ctxBar && top.length > 0) {
-      new Chart(ctxBar, {
+    // Cada gráfico é independente: se um falhar, o outro continua.
+    if (top.length > 0) {
+      desenharGrafico('grafico-barras', {
         type: 'bar',
         data: {
-          labels: top.map((p) => p.participante.nome.split(' ')[0]),
+          labels: top.map((p) => (p.participante.nome || '?').split(' ')[0]),
           datasets: [
             { label: 'Presenças', data: top.map((p) => p.stats.presencas), backgroundColor: cores.verde },
             { label: 'Faltas', data: top.map((p) => p.stats.faltas), backgroundColor: cores.marrom },
@@ -119,17 +119,17 @@
         },
         options: {
           responsive: true,
-          scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } },
+          maintainAspectRatio: false,
+          scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, ticks: { precision: 0 } } },
           plugins: { legend: { position: 'bottom' } },
         },
       });
-    } else if (ctxBar) {
-      ctxBar.parentElement.insertAdjacentHTML('beforeend', '<p class="tabela-vazia">Sem dados suficientes ainda.</p>');
+    } else {
+      mostrarGraficoSemDados('grafico-barras');
     }
 
-    const ctxPizza = document.getElementById('grafico-pizza');
-    if (ctxPizza && geral.totalAtividades > 0) {
-      new Chart(ctxPizza, {
+    if (geral.totalPresencas + geral.totalFaltas + geral.totalJustificadas > 0) {
+      desenharGrafico('grafico-pizza', {
         type: 'doughnut',
         data: {
           labels: ['Presenças', 'Faltas', 'Justificadas'],
@@ -140,10 +140,10 @@
             },
           ],
         },
-        options: { responsive: true, plugins: { legend: { position: 'bottom' } } },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } },
       });
-    } else if (ctxPizza) {
-      ctxPizza.parentElement.insertAdjacentHTML('beforeend', '<p class="tabela-vazia">Sem dados suficientes ainda.</p>');
+    } else {
+      mostrarGraficoSemDados('grafico-pizza');
     }
   }
 })();

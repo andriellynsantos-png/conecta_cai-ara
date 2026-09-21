@@ -203,3 +203,30 @@ async function criarContaFirebaseSemDeslogar(username, senha) {
     await appTemporario.delete();
   }
 }
+
+// ---------------- Gráficos (Chart.js) ----------------
+// Desenha um gráfico com segurança. Se o Chart.js não carregou (sem internet,
+// bloqueador de anúncios, CDN fora do ar) ou se algo falhar ao desenhar,
+// mostra um aviso no lugar em vez de deixar o quadro em branco.
+function desenharGrafico(canvasId, config) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return null;
+  const caixa = canvas.parentElement;
+  if (typeof Chart === 'undefined') {
+    caixa.innerHTML =
+      '<p class="tabela-vazia">Não foi possível carregar a biblioteca de gráficos. Verifique a internet e recarregue a página.</p>';
+    return null;
+  }
+  try {
+    return new Chart(canvas, config);
+  } catch (err) {
+    console.error('Erro ao desenhar gráfico', canvasId, err);
+    caixa.innerHTML = '<p class="tabela-vazia">Não foi possível desenhar este gráfico.</p>';
+    return null;
+  }
+}
+
+function mostrarGraficoSemDados(canvasId) {
+  const canvas = document.getElementById(canvasId);
+  if (canvas) canvas.parentElement.innerHTML = '<p class="tabela-vazia">Sem dados suficientes ainda.</p>';
+}
