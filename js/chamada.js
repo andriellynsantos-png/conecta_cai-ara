@@ -42,13 +42,15 @@
     tbody.innerHTML = participantes
       .map(
         (p) => `
-      <tr>
+            <tr>
         <td>${escapeHtml(p.nome)}</td>
         <td>
-          <div class="barra-acoes" style="gap:14px;">
+          <div class="barra-acoes" style="gap:14px; flex-wrap:wrap;">
             <label style="font-weight:400;font-size:0.85rem;"><input type="radio" name="status_${p.id}" value="presente" checked> Presente</label>
             <label style="font-weight:400;font-size:0.85rem;"><input type="radio" name="status_${p.id}" value="falta"> Falta</label>
             <label style="font-weight:400;font-size:0.85rem;"><input type="radio" name="status_${p.id}" value="justificada"> Justificada</label>
+            <label style="font-weight:400;font-size:0.85rem;color:var(--cinza-medio);"><input type="radio" name="status_${p.id}" value="nao_entrou"> Ainda não tinha entrado</label>
+            <label style="font-weight:400;font-size:0.85rem;color:var(--cinza-medio);"><input type="radio" name="status_${p.id}" value="saiu"> Já tinha saído</label>
           </div>
         </td>
         <td><input type="text" data-obs="${p.id}" placeholder="opcional" style="width:100%;padding:6px 8px;border-radius:6px;border:1px solid var(--cinza-borda);"></td>
@@ -95,13 +97,17 @@
         return;
       }
 
-      const registros = participantesAtivas.map((p) => {
-        const radios = document.getElementsByName(`status_${p.id}`);
-        let status = 'presente';
-        radios.forEach((r) => { if (r.checked) status = r.value; });
-        const obsInput = document.querySelector(`input[data-obs="${p.id}"]`);
-        return { participanteId: p.id, status, obs: obsInput ? obsInput.value.trim() : '' };
-      });
+            const registros = participantesAtivas
+        .map((p) => {
+          const radios = document.getElementsByName(`status_${p.id}`);
+          let status = 'presente';
+          radios.forEach((r) => { if (r.checked) status = r.value; });
+          const obsInput = document.querySelector(`input[data-obs="${p.id}"]`);
+          return { participanteId: p.id, status, obs: obsInput ? obsInput.value.trim() : '' };
+        })
+        // "ainda não tinha entrado" e "já tinha saído" não geram registro nessa
+        // chamada — não conta nem a favor nem contra a % de presença.
+        .filter((r) => r.status !== 'nao_entrou' && r.status !== 'saiu');
 
       const chamadas = await DB.getChamadas();
       const existente = await chamadaJaExiste();
