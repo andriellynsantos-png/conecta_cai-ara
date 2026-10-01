@@ -57,8 +57,12 @@
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./sw.js")
-      .then(() => console.log("PWA ativado!"))
-      .catch(erro => console.error("Erro no PWA:", erro));
+      .then(() => {
+        console.log("PWA ativado!");
+      })
+      .catch(erro => {
+        console.error("Erro ao ativar PWA:", erro);
+      });
   });
 }
 </script>
