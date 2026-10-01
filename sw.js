@@ -1,38 +1,36 @@
-const CACHE_NAME = "conecta-caicara-v1";
+const CACHE_NAME = "rodas-sobre-areia-v2";
 
 const ARQUIVOS = [
   "./",
   "./index.html",
   "./css/style.css",
-  "./assets/logo.jpeg"
+  "./assets/logo.jpeg",
+  "./assets/icon-192.png",
+  "./assets/icon-512.png"
 ];
 
-// Instala o Service Worker
 self.addEventListener("install", event => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(ARQUIVOS))
+    caches.open(CACHE_NAME).then(cache => cache.addAll(ARQUIVOS))
   );
 
   self.skipWaiting();
 });
 
-// Remove caches antigos
 self.addEventListener("activate", event => {
   event.waitUntil(
-    caches.keys().then(chaves => {
-      return Promise.all(
+    caches.keys().then(chaves =>
+      Promise.all(
         chaves
           .filter(chave => chave !== CACHE_NAME)
           .map(chave => caches.delete(chave))
-      );
-    })
+      )
+    )
   );
 
   self.clients.claim();
 });
 
-// Intercepta as requisições
 self.addEventListener("fetch", event => {
   const url = new URL(event.request.url);
 
@@ -43,7 +41,6 @@ self.addEventListener("fetch", event => {
   event.respondWith(
     fetch(event.request)
       .then(resposta => {
-        // Guarda uma cópia atualizada dos arquivos
         const copia = resposta.clone();
 
         caches.open(CACHE_NAME).then(cache => {
@@ -52,9 +49,6 @@ self.addEventListener("fetch", event => {
 
         return resposta;
       })
-      .catch(() => {
-        // Se estiver sem internet, tenta usar o cache
-        return caches.match(event.request);
-      })
+      .catch(() => caches.match(event.request))
   );
 });
