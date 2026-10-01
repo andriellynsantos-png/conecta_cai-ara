@@ -53,6 +53,7 @@
 <script src="js/db.js"></script>
 <script src="js/auth.js"></script>
   
+<!-- PWA -->
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -67,37 +68,49 @@ if ("serviceWorker" in navigator) {
 }
 </script>
 
-</script>
-  // Se já existe sessão válida, pula direto para a área correta
-  (async function redirecionarSeLogada() {
-    const user = await Auth.getCurrentUser();
-    if (user) {
-      window.location.href = user.role === 'admin' ? 'dashboard.html' : 'perfil.html';
-    }
-  })();
+<!-- Login -->
+<script>
+(async function redirecionarSeLogada() {
+  const user = await Auth.getCurrentUser();
 
-  document.getElementById('form-login').addEventListener('submit', async function (e) {
-    e.preventDefault();
-    const username = document.getElementById('username').value;
-    const senha = document.getElementById('senha').value;
-    const manter = document.getElementById('manter-conectada').checked;
-    const areaMsg = document.getElementById('area-mensagem');
-    const botao = e.target.querySelector('button[type=submit]');
+  if (user) {
+    window.location.href =
+      user.role === 'admin'
+        ? 'dashboard.html'
+        : 'perfil.html';
+  }
+})();
 
-    botao.disabled = true;
-    botao.textContent = 'Entrando...';
+document.getElementById('form-login').addEventListener('submit', async function (e) {
+  e.preventDefault();
 
-    const resultado = await Auth.login(username, senha, manter);
+  const username = document.getElementById('username').value;
+  const senha = document.getElementById('senha').value;
+  const manter = document.getElementById('manter-conectada').checked;
+  const areaMsg = document.getElementById('area-mensagem');
+  const botao = e.target.querySelector('button[type=submit]');
 
-    if (!resultado.ok) {
-      areaMsg.innerHTML = `<div class="msg-erro" style="margin-bottom:14px;">${resultado.msg}</div>`;
-      botao.disabled = false;
-      botao.textContent = 'Entrar';
-      return;
-    }
+  botao.disabled = true;
+  botao.textContent = 'Entrando...';
 
-    window.location.href = resultado.user.role === 'admin' ? 'dashboard.html' : 'perfil.html';
-  });
+  const resultado = await Auth.login(username, senha, manter);
+
+  if (!resultado.ok) {
+    areaMsg.innerHTML =
+      `<div class="msg-erro" style="margin-bottom:14px;">
+        ${resultado.msg}
+      </div>`;
+
+    botao.disabled = false;
+    botao.textContent = 'Entrar';
+    return;
+  }
+
+  window.location.href =
+    resultado.user.role === 'admin'
+      ? 'dashboard.html'
+      : 'perfil.html';
+});
 </script>
 </body>
 </html>
