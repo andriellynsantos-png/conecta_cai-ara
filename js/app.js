@@ -230,3 +230,20 @@ function mostrarGraficoSemDados(canvasId) {
   const canvas = document.getElementById(canvasId);
   if (canvas) canvas.parentElement.innerHTML = '<p class="tabela-vazia">Sem dados suficientes ainda.</p>';
 }
+
+// Conta quantas faltas seguidas (falta OU justificada) a participante tem,
+// olhando da chamada mais recente pra trás, até achar uma presença.
+function calcularFaltasConsecutivas(chamadas, participanteId) {
+  const ordenadas = [...chamadas].sort((a, b) => (a.data < b.data ? 1 : -1));
+  let streak = 0;
+  for (const chamada of ordenadas) {
+    const registro = chamada.registros.find((r) => r.participanteId === participanteId);
+    if (!registro) continue;
+    if (registro.status === 'falta' || registro.status === 'justificada') {
+      streak++;
+    } else if (registro.status === 'presente') {
+      break;
+    }
+  }
+  return streak;
+}
