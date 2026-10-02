@@ -1,12 +1,3 @@
-/* ============================================================
-   primeiro-acesso.js
-   ------------------------------------------------------------
-   Só permite criar a conta se ainda NÃO existir nenhuma conta
-   no sistema. Depois que a primeira coordenadora é criada, essa
-   página se recusa a criar outra (use "Contas de acesso" dentro
-   do sistema, já logada).
-   ============================================================ */
-
 (async function () {
   const form = document.getElementById('form-primeiro-acesso');
   const areaMsg = document.getElementById('area-mensagem');
