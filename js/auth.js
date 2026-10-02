@@ -1,16 +1,3 @@
-/* ============================================================
-   auth.js — Login, sessão e proteção de páginas
-   ------------------------------------------------------------
-   Agora quem valida usuária/senha de verdade é o Firebase
-   Authentication (seguro, com senha criptografada no servidor
-   do Google — bem diferente do hash caseiro que o sistema usava
-   antes só com localStorage).
-
-   O Firestore (users/{id}) guarda só os "metadados" de cada
-   conta: a que participante ela pertence, se é admin ou
-   integrante, e se está ativa ou não.
-   ============================================================ */
-
 const Auth = {
   // manterConectada = true  -> continua logada mesmo fechando o navegador
   // manterConectada = false -> desloga ao fechar a aba/navegador
