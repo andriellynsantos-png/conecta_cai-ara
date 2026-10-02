@@ -714,3 +714,33 @@ tbody tr.clicavel { cursor: pointer; }
 
   .grid-cards { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
 }
+
+.alerta-faltas {
+  background: #fbeae6;
+  border: 1px solid #f2c4b8;
+  border-left: 4px solid var(--status-falta);
+  border-radius: var(--raio);
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  position: relative;
+}
+.alerta-faltas h3 {
+  color: var(--status-falta);
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+.alerta-faltas ul {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 0.9rem;
+}
+.alerta-faltas .fechar-alerta {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: var(--cinza-medio);
+}
