@@ -126,7 +126,21 @@
         });
       }
 
-      await DB.saveChamadas(chamadas);
+     await DB.saveChamadas(chamadas);
+
+      // confere quem acabou de bater 3 faltas seguidas (falta ou justificada contam)
+      const participantesEmAlerta = [];
+      registros.forEach((r) => {
+        if (r.status === 'falta' || r.status === 'justificada') {
+          const streak = calcularFaltasConsecutivas(chamadas, r.participanteId);
+          if (streak >= 3) {
+            const participante = todasParticipantes.find((p) => p.id === r.participanteId);
+            participantesEmAlerta.push({ nome: participante ? participante.nome : 'Participante', streak });
+          }
+        }
+      });
+      renderAlertaFaltasConsecutivas(participantesEmAlerta);
+
       mostrarToast('Chamada salva com sucesso! Cálculos e histórico atualizados.', 'sucesso');
 
       // limpa o formulário para a próxima chamada
