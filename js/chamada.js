@@ -152,4 +152,22 @@
       botao.textContent = 'Salvar chamada';
     }
   }
+
+  function renderAlertaFaltasConsecutivas(lista) {
+    const container = document.getElementById('alerta-faltas-consecutivas');
+    if (!container) return;
+    if (lista.length === 0) {
+      container.innerHTML = '';
+      return;
+    }
+    container.innerHTML = `
+      <div class="alerta-faltas">
+        <button type="button" class="fechar-alerta" onclick="this.parentElement.remove()">&times;</button>
+        <h3>Atenção: faltas consecutivas</h3>
+        <ul>
+          ${lista.map((p) => `<li><strong>${escapeHtml(p.nome)}</strong> — ${p.streak} faltas seguidas</li>`).join('')}
+        </ul>
+      </div>
+    `;
+  }
 })();
