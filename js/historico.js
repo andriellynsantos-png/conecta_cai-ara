@@ -165,12 +165,42 @@
     await renderTabela();
   }
 
-  async function exportarPlanilha() {
+    async function exportarPlanilha() {
     const participantes = await DB.getParticipantes();
     const chamadas = await DB.getChamadas();
 
-    // Aba 1: resumo por participante
-    const resumo = participantes.map((p) => {
+    const participantesOrdenadas = [...participantes].sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+
+    // datas únicas, em ordem cronológica — se houver mais de uma atividade
+    // na mesma data, usa a primeira encontrada para montar essa coluna
+    const datasUnicas = [...new Set(chamadas.map((c) => c.data))].sort();
+    const chamadaPorData = {};
+    datasUnicas.forEach((data) => {
+      chamadaPorData[data] = chamadas.find((c) => c.data === data);
+    });
+
+    const codigoPorStatus = { presente: 'c', falta: 'f', justificada: 'atestado' };
+
+    // Aba 1: chamada no formato largo (igual à planilha que vocês já usam)
+    let contadorAtivas = 1;
+    const linhasChamada = participantesOrdenadas.map((p) => {
+      const linha = {
+        'Nº': p.status === 'inativa' ? 'X' : contadorAtivas,
+        Nome: p.nome,
+        Turma: p.turma || '',
+      };
+      if (p.status !== 'inativa') contadorAtivas++;
+
+      datasUnicas.forEach((data) => {
+        const chamada = chamadaPorData[data];
+        const registro = chamada.registros.find((r) => r.participanteId === p.id);
+        linha[formatarData(data)] = registro ? codigoPorStatus[registro.status] || registro.status : '-';
+      });
+      return linha;
+    });
+
+    // Aba 2: resumo por participante (totais e porcentagens)
+    const resumo = participantesOrdenadas.map((p) => {
       const stats = calcularEstatisticasParticipante(chamadas, p.id);
       return {
         Nome: p.nome,
@@ -185,7 +215,7 @@
       };
     });
 
-    // Aba 2: histórico detalhado (uma linha por participante/chamada)
+    // Aba 3: histórico detalhado (uma linha por participante/chamada, com nome da atividade)
     const mapaNomes = Object.fromEntries(participantes.map((p) => [p.id, p.nome]));
     const detalhado = [];
     chamadas.forEach((c) => {
@@ -201,6 +231,7 @@
     });
 
     const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(linhasChamada), 'Chamada');
     XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(resumo), 'Resumo por participante');
     XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(detalhado), 'Histórico detalhado');
 
